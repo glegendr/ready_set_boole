@@ -1,0 +1,64 @@
+mod exo_01;
+mod exo_02;
+mod exo_03;
+mod exo_04;
+mod exo_05;
+use exo_01::adder;
+use exo_02::multiplier;
+use exo_03::gray_code;
+use exo_04::eval_formula;
+use exo_05::print_truth_table;
+use colored::Colorize;
+
+fn check(assert: bool, title: &str) {
+    let is_ok = if assert {
+        "✓".green()
+    } else {
+        "x".red()
+    };
+    println!("[{}] {}", is_ok, title)
+}
+
+fn main() {
+    println!("========== Adder ==========");
+    check(2 == adder(1, 1), "1 + 1");
+    check(0 == adder(0, 0), "0 + 0");
+    check(129 == adder(55, 74), "55 + 74");
+    check(255 == adder(205, 50), "205 + 50");
+    check(4294967295 == adder(876498323, 3418468972), "876498323 + 3418468972");
+    println!("======== Multiplier =======");
+    check(1 == multiplier(1, 1), "1 x 1");
+    check(0 == multiplier(0, 0), "0 x 0");
+    check(0 == multiplier(13, 0), "13 x 0");
+    check(4070 == multiplier(55, 74), "55 x 74");
+    check(10250 == multiplier(205, 50), "205 x 50");
+    check(1139447699 == multiplier(87649823, 13), "87649823 x 13");
+    println!("======== Gray Code ========");
+    check(0 == gray_code(0), "0");
+    check(1 == gray_code(1), "1");
+    check(3 == gray_code(2), "2");
+    check(2 == gray_code(3), "3");
+    check(6 == gray_code(4), "4");
+    check(7 == gray_code(5), "5");
+    check(5 == gray_code(6), "6");
+    check(4 == gray_code(7), "7");
+    check(12 == gray_code(8), "8");
+    check(7019 == gray_code(4685), "4685");
+    println!("======== Boolean evaluation ========");
+    check(!eval_formula("10&"), "10&");
+    check(eval_formula("1!1|"), "1!1|");
+    check(eval_formula("11>"), "11>");
+    check(!eval_formula("10="), "10=");
+    check(eval_formula("1011||="), "1011||=");
+    check(eval_formula("101&^011|^|"), "101&^011|^|");
+    // check(!eval_formula("1011|b|="), "1011|b|=");
+    // check(!eval_formula("1011||^="), "1011||^=");
+    // check(!eval_formula(""), "");
+    println!("======== Truth Table ========");
+    print_truth_table("ABA&^BCA|^|");
+    print_truth_table("AB!C^DE|FGHIJKLM&=|=&|^^^=");
+    // print_truth_table("ABA&^BCA|^|")
+    // print_truth_table("ABA&^BCA|^|")
+}
+// ab!c^de|f&=|
+// ((!b) ^ c) = (d | e) & f | a
