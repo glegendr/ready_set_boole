@@ -1,13 +1,13 @@
+mod exo_00;
 mod exo_01;
 mod exo_02;
 mod exo_03;
 mod exo_04;
-mod exo_05;
-use exo_01::adder;
-use exo_02::multiplier;
-use exo_03::gray_code;
-use exo_04::eval_formula;
-use exo_05::print_truth_table;
+use exo_00::adder;
+use exo_01::multiplier;
+use exo_02::gray_code;
+use exo_03::{eval_formula, to_tree};
+use exo_04::print_truth_table;
 use colored::Colorize;
 
 fn check(assert: bool, title: &str) {
@@ -47,18 +47,38 @@ fn main() {
     println!("======== Boolean evaluation ========");
     check(!eval_formula("10&"), "10&");
     check(eval_formula("1!1|"), "1!1|");
+    check(eval_formula("00>"), "00>");
+    check(!eval_formula("10>"), "10>");
+    check(eval_formula("01>"), "01>");
     check(eval_formula("11>"), "11>");
     check(!eval_formula("10="), "10=");
     check(eval_formula("1011||="), "1011||=");
     check(eval_formula("101&^011|^|"), "101&^011|^|");
-    // check(!eval_formula("1011|b|="), "1011|b|=");
-    // check(!eval_formula("1011||^="), "1011||^=");
-    // check(!eval_formula(""), "");
+    check(eval_formula("1!01&^011|^|"), "1!01&^011|^|");
+    check(!eval_formula("1011|b|="), "1011|b|=");
+    check(!eval_formula("1011||^="), "1011||^=");
+    check(!eval_formula(""), "");
     println!("======== Truth Table ========");
-    print_truth_table("ABA&^BCA|^|");
-    print_truth_table("AB!C^DE|FGHIJKLM&=|=&|^^^=");
+    // print_truth_table("ABA&^BCA|^|");
+    println!("---- AB&! ---");
+    print_truth_table("AB&!");
+    println!("\n--- A!B!> ---");
+    print_truth_table("A!B!>");
+    // print_truth_table("AB!C^DE|FGHIJKLM&=|=&|^^^=");
+    // print_truth_table("AB!C^DE|FGHIJKLMNOPQRSTU&=|=&|^^^=|=^>>&=^");
     // print_truth_table("ABA&^BCA|^|")
     // print_truth_table("ABA&^BCA|^|")
+    println!("======== Negation Normal Form ========");
+    // println!("{:?}", to_tree("DAC=B|&!"));
+    println!("\nAB=\n");
+    print_truth_table("AB=");
+    print_truth_table("AB&A!B!&|");
+    println!("\nAB>\n");
+    print_truth_table("AB>");
+    print_truth_table("A!B|");
+    println!("\nAB^\n");
+    print_truth_table("AB^");
+    print_truth_table("AB!&A!B&|");
 }
 // ab!c^de|f&=|
 // ((!b) ^ c) = (d | e) & f | a
