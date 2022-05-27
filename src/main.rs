@@ -3,11 +3,13 @@ mod exo_01;
 mod exo_02;
 mod exo_03;
 mod exo_04;
+mod exo_05;
 use exo_00::adder;
 use exo_01::multiplier;
 use exo_02::gray_code;
 use exo_03::{eval_formula, to_tree};
 use exo_04::print_truth_table;
+use exo_05::conjunctive_normal_form;
 use colored::Colorize;
 
 fn check(assert: bool, title: &str) {
@@ -63,21 +65,45 @@ fn main() {
     println!("---- AB&C| ---");
     print_truth_table("AB&C|");
     // print_truth_table("AB!C^DE|FGHIJKLM&=|=&|^^^=");
-    println!("\n--- AB!C^DE|FGHIJKLMNOPQZSTU&=|=&|^^^=|=^>>&=^ ---");
-    print_truth_table("AB!C^DE|FGHIJKLMNOPQZSTU&=|=&|^^^=|=^>>&=^");
+    // println!("\n--- AB!C^DE|FGHIJKLMNOPQZSTU&=|=&|^^^=|=^>>&=^ ---");
+    // print_truth_table("AB!C^DE|FGHIJKLMNOPQZSTU&=|=&|^^^=|=^>>&=^");
     // print_truth_table("ABA&^BCA|^|")
     // print_truth_table("ABA&^BCA|^|")
     println!("======== Negation Normal Form ========");
-    // println!("{:?}", to_tree("DAC=B|&!"));
-    println!("\nAB=\n");
-    print_truth_table("AB=");
-    print_truth_table("AB&A!B!&|");
-    println!("\nAB>\n");
-    print_truth_table("AB>");
-    print_truth_table("A!B|");
-    println!("\nAB^\n");
-    print_truth_table("AB^");
-    print_truth_table("AB!&A!B&|");
+    println!("{}", conjunctive_normal_form("AB="));
+    println!("{}", conjunctive_normal_form("AB>"));
+    println!("{}", conjunctive_normal_form("AB^"));
+    println!("{}", conjunctive_normal_form("AB=AB^>"));
+    println!("{}", conjunctive_normal_form("AB=!!"));
+    // AB&A!B!&|!AB!&A!B&||
+    // A!B!|AB|&
 }
 // ab!c^de|f&=|
 // ((!b) ^ c) = (d | e) & f | a
+
+/*
+ * AB^
+ * 
+ *      |
+ *     / \
+ *    &   &
+ *   /|  / \
+ *  A ! B   !
+ *    |     |
+ *    B     A
+ * 
+ * AB=
+ *      |
+ *     / \
+ *    &   & 
+ *   / \  |\
+ *  !   ! A B
+ *  |   |
+ *  B   A
+ *
+ * 
+ * AB|!!
+ * AB|
+ * AB|!
+ * A!B!& 
+*/
