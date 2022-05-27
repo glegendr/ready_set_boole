@@ -4,12 +4,14 @@ mod exo_02;
 mod exo_03;
 mod exo_04;
 mod exo_05;
+mod exo_06;
 use exo_00::adder;
 use exo_01::multiplier;
 use exo_02::gray_code;
 use exo_03::{eval_formula, to_tree};
 use exo_04::print_truth_table;
 use exo_05::negation_normal_form;
+use exo_06::conjunctive_normal_form;
 use colored::Colorize;
 
 fn check(assert: bool, title: &str) {
@@ -76,6 +78,13 @@ fn main() {
     println!("{}", negation_normal_form("CD^"));
     println!("{}", negation_normal_form("AB=CD^>"));
     println!("{}", negation_normal_form("AB=!!"));
+    println!("======== Conjonctive Normal Form ========");
+    // println!("{}", negation_normal_form("AB&C&D&"));
+    print_truth_table("AB&C&");
+    print_truth_table("ABC&&");
+    println!("{}", conjunctive_normal_form("ABC&|"));
+    print_truth_table("PQ|RS&&");//(P|Q)&(R&S)
+    print_truth_table("PR&PS&|QR&QS&&|");//(P&R)|(P&S)|(Q&R)&(Q&S)
     // AB&A!B!&|!AB!&A!B&||
     // A!B!|AB|&
 }
@@ -107,4 +116,49 @@ fn main() {
  * AB|
  * AB|!
  * A!B!& 
+ * 1 2 + 3 *
+ * 3 1 * 2 3 * +
+ * 3(1 + 2)
+ * 3 * 1 + 3 * 2
+ * AB|C&
+ * CA&AB&|
+ * 
+ * 
+ * 
+ * CB&A&
+ * ABC&&
+ * 
+ * A & ( B & C )
+ * (A & B) & (A & C)
+ * AB&AC&&
+ * 
+ * D & ( C & ( B & A ))
+ * AB|C|
+ * ABC||
+ * 
+ *      |
+ *     / \
+ *    A   &
+ *       / \
+ *      B   C
+ *
+ * 
+ *        &
+ *    |       |
+ *  A   B   A   C
+ *
+ * 
+ *  ABCD&&&
+ * 
+ *       &
+ *      / \
+ *     &   &
+ *    /|   |\
+ *   A B   C D
+ * 
+ *  A    B
+ * (AB&)(CD&)|
+ * 
+ * 
+ * (1 + 2) / (3 - 4)
 */
