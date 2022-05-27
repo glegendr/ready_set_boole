@@ -60,12 +60,11 @@ fn main() {
     check(!eval_formula(""), "");
     println!("======== Truth Table ========");
     // print_truth_table("ABA&^BCA|^|");
-    println!("---- AB&! ---");
-    print_truth_table("AB&!");
-    println!("\n--- A!B!> ---");
-    print_truth_table("A!B!>");
+    println!("---- AB&C| ---");
+    print_truth_table("AB&C|");
     // print_truth_table("AB!C^DE|FGHIJKLM&=|=&|^^^=");
-    // print_truth_table("AB!C^DE|FGHIJKLMNOPQRSTU&=|=&|^^^=|=^>>&=^");
+    println!("\n--- AB!C^DE|FGHIJKLMNOPQZSTU&=|=&|^^^=|=^>>&=^ ---");
+    print_truth_table("AB!C^DE|FGHIJKLMNOPQZSTU&=|=&|^^^=|=^>>&=^");
     // print_truth_table("ABA&^BCA|^|")
     // print_truth_table("ABA&^BCA|^|")
     println!("======== Negation Normal Form ========");

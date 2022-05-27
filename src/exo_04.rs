@@ -1,28 +1,27 @@
 use crate::exo_03::eval_formula;
 
-fn print_titles(vars: &str) {
-    print!("|");
+fn print_titles(vars: &str) -> String {
+    let mut ret = String::from("|");
     for var in vars.chars() {
-        print!(" {} |", var);
+        ret.push_str(&format!(" {var} |"));
     }
-    print!(" = |\n|");
+    ret.push_str(" = |\n|");
     for _var in vars.chars() {
-        print!("---|");
+        ret.push_str("---|");
     }
-    print!("---|\n");
+    ret.push_str("---|\n");
+    ret
 }
 
-fn print_results(results: Vec<(u32, bool)>, vars_len: usize) {
+fn print_results(results: Vec<(u32, bool)>, vars_len: usize) -> String {
+    let mut ret = String::default();
     for result in results {
         for i in 0..vars_len {
-            print!("| {} ", (result.0 >> i) & 1);
+            ret.push_str(&format!("| {} ", (result.0 >> i) & 1));
         }
-        println!("| {} |", if result.1 {
-            1
-        } else {
-            0
-        });
+        ret.push_str(&format!("| {} |\n", if result.1 { 1 } else { 0 }));
     }
+    ret
 }
 
 pub fn print_truth_table(formula: &str) {
@@ -42,13 +41,23 @@ pub fn print_truth_table(formula: &str) {
     }
     let permutations: Vec<u32> = (0..=u32::MAX >> (32 - vars.len())).collect();
     let mut results: Vec<(u32, bool)> = Vec::new();
+    let mut permutation_formula = String::with_capacity(formula.len());
     for permutation in &permutations {
-        let mut permutation_formula = String::from(formula);
-        for (i, var) in vars.chars().enumerate() {
-            permutation_formula = permutation_formula.replace(var, &((permutation >> i) & 1).to_string());
+        for c in formula.chars() {
+            match c {
+                'A'..='Z' => {
+                    if let Some(i) = vars.find(c) {
+                        permutation_formula.push(((permutation >> i) & 1).to_string().chars().next().unwrap());
+                    } else {
+                        println!("Unexpected variable {c}");
+                        return
+                    }
+                },
+                _ => permutation_formula.push(c)
+            }
         }
         results.push((*permutation, eval_formula(&permutation_formula)));
+        permutation_formula.clear();
     }
-    print_titles(&vars);
-    print_results(results, vars.len());
+    print!("{}{}", print_titles(&vars), print_results(results, vars.len()));
 }
