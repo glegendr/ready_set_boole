@@ -82,7 +82,7 @@ fn modify_tree(tree: &Box<BTree>) -> BTree {
     }
 }
 
-pub fn conjunctive_normal_form(formula: &str) -> String {
+pub fn negation_normal_form(formula: &str) -> String {
     match to_tree(formula) {
         Ok(tree) => modify_tree(&Box::new(tree)).to_string(),
         Err(e) => {

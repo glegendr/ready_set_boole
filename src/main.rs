@@ -9,7 +9,7 @@ use exo_01::multiplier;
 use exo_02::gray_code;
 use exo_03::{eval_formula, to_tree};
 use exo_04::print_truth_table;
-use exo_05::conjunctive_normal_form;
+use exo_05::negation_normal_form;
 use colored::Colorize;
 
 fn check(assert: bool, title: &str) {
@@ -70,11 +70,12 @@ fn main() {
     // print_truth_table("ABA&^BCA|^|")
     // print_truth_table("ABA&^BCA|^|")
     println!("======== Negation Normal Form ========");
-    println!("{}", conjunctive_normal_form("AB="));
-    println!("{}", conjunctive_normal_form("AB>"));
-    println!("{}", conjunctive_normal_form("AB^"));
-    println!("{}", conjunctive_normal_form("AB=AB^>"));
-    println!("{}", conjunctive_normal_form("AB=!!"));
+    println!("{}", negation_normal_form("AB="));
+    println!("{}", negation_normal_form("AB=!!"));
+    println!("{}", negation_normal_form("AB>"));
+    println!("{}", negation_normal_form("CD^"));
+    println!("{}", negation_normal_form("AB=CD^>"));
+    println!("{}", negation_normal_form("AB=!!"));
     // AB&A!B!&|!AB!&A!B&||
     // A!B!|AB|&
 }
