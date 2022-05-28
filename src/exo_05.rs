@@ -45,26 +45,16 @@ fn modify_tree(tree: &Box<BTree>) -> BTree {
             _ => {
                 let a = modify_tree(&c2);
                 match &a.node {
-                    Operator::And => {
-                        let mut ret = BTree::new(Operator::Or);
-                        let mut c2_1 = BTree::new(Operator::Not);
-                        c2_1.insert_b(*a.c2.unwrap());
-                        ret.insert_b(modify_tree(&Box::new(c2_1)));
-                        let mut c1_1 = BTree::new(Operator::Not);
-                        c1_1.insert_b(*a.c1.unwrap());
-                        ret.insert_a(modify_tree(&Box::new(c1_1)));
-                        ret
-                    }
-                    Operator::Or => {
-                        let mut ret = BTree::new(Operator::And);
-                        let mut c2_1 = BTree::new(Operator::Not);
-                        c2_1.insert_b(*a.c2.unwrap());
-                        ret.insert_b(modify_tree(&Box::new(c2_1)));
-                        let mut c1_1 = BTree::new(Operator::Not);
-                        c1_1.insert_b(*a.c1.unwrap());
-                        ret.insert_a(modify_tree(&Box::new(c1_1)));
-                        ret
-                    }
+                    Operator::And => BTree::create(
+                        Operator::Or,
+                        insert_not(*a.c1.unwrap()),
+                        insert_not(*a.c2.unwrap())
+                    ),
+                    Operator::Or => BTree::create(
+                        Operator::And,
+                        insert_not(*a.c1.unwrap()),
+                        insert_not(*a.c2.unwrap()),
+                    ),
                     Operator::Not => (*a.c2.unwrap()).clone(),
                     _ => *tree.clone(),
                 }

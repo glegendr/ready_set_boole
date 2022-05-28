@@ -89,6 +89,34 @@ impl BTree {
             _ => format!("{self:?}")
         }
     }
+    pub fn to_cnfstring(&self) -> String {
+        let tree = self.to_string();
+        let mut op: (Option<char>, usize) = (None, 0);
+        for c in tree.chars() {
+            match c {
+                '|' | '&' => {
+                    if let Some(curr_op) = op.0 {
+                        if curr_op == c {
+                            op.1 += 1;
+                        } else {
+                            return tree
+                        }
+                    } else {
+                        op = (Some(c), 1);
+                    }
+                },
+                _ => ()
+            }
+        }
+        if let Some(op_c) = op.0 {
+            let mut new_tree = tree.replace(op_c, "");
+            for _ in 0..op.1 {
+                new_tree.push(op_c);
+            }
+            return new_tree
+        }
+        tree
+    }
 }
 
 

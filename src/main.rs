@@ -23,6 +23,15 @@ fn check(assert: bool, title: &str) {
     println!("[{}] {}", is_ok, title)
 }
 
+fn check_string(expected: &str, founded: &str, title: &str) {
+    if expected == founded {
+        println!("[{}] {}", "✓".green(), title)
+    } else {
+        println!("[{}] expected: {}  founded: {}", "x".red(), expected, founded)
+    };
+
+}
+
 fn main() {
     println!("========== Adder ==========");
     check(2 == adder(1, 1), "1 + 1");
@@ -73,18 +82,30 @@ fn main() {
     // print_truth_table("ABA&^BCA|^|")
     println!("======== Negation Normal Form ========");
     println!("{}", negation_normal_form("AB="));
-    println!("{}", negation_normal_form("AB=!!"));
+    println!("{}", negation_normal_form("AB=!"));
     println!("{}", negation_normal_form("AB>"));
     println!("{}", negation_normal_form("CD^"));
     println!("{}", negation_normal_form("AB=CD^>"));
     println!("{}", negation_normal_form("AB=!!"));
     println!("======== Conjonctive Normal Form ========");
     // println!("{}", negation_normal_form("AB&C&D&"));
-    print_truth_table("AB&C&");
-    print_truth_table("ABC&&");
-    println!("{}", conjunctive_normal_form("ABC&|"));
-    print_truth_table("PQ|RS&&");//(P|Q)&(R&S)
-    print_truth_table("PR&PS&|QR&QS&&|");//(P&R)|(P&S)|(Q&R)&(Q&S)
+    // print_truth_table("AB&C&");
+    // print_truth_table("ABC&&");
+    check_string("A!B!|", &conjunctive_normal_form("AB&!"), "AB&!");
+    check_string("A!B!&", &conjunctive_normal_form("AB|!"), "AB|!");
+    check_string("AB|C&", &conjunctive_normal_form("AB|C&"), "AB|C&");
+    check_string("ABCD|||", &conjunctive_normal_form("AB|C|D|"), "AB|C|D|");
+    check_string("ABCD&&&", &conjunctive_normal_form("AB&C&D&"), "AB&C&D&");
+    check_string("A!B!C!||", &conjunctive_normal_form("AB&!C!|"), "AB&!C!|");
+    check_string("A!B!C!&&", &conjunctive_normal_form("AB|!C!&"), "AB|!C!&");
+    /*
+     *     &
+     *   |   A
+     *  B &
+     *   C D
+    */
+    // print_truth_table("PQ|RS&&");//(P|Q)&(R&S)
+    // print_truth_table("PR&PS&|QR&QS&&|");//(P&R)|(P&S)|(Q&R)&(Q&S)
     // AB&A!B!&|!AB!&A!B&||
     // A!B!|AB|&
 }

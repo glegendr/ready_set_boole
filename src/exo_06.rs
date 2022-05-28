@@ -13,27 +13,36 @@ fn modify_tree(tree: &Box<BTree>) -> BTree {
     match (&tree.node, &tree.c1, &tree.c2) {
         (Operator::Or, Some(c1), Some(c2)) => {
             match (&c1.node, &c2.node) {
-                (Operator::L(_) | Operator::Not, Operator::Or | Operator::And) => {
+                (Operator::L(_) | Operator::Not, Operator::And) => {
                     let mut ret = BTree::new(c2.node.clone());
-                    ret.insert_a(BTree::create(tree.node.clone(), *c1.clone(), *(c2.c1.clone().unwrap())));
-                    ret.insert_b(BTree::create(tree.node.clone(), *c1.clone(), *(c2.c2.clone().unwrap())));
+                    let a = modify_tree(c1);
+                    let b = modify_tree(c2);
+                    ret.insert_a(BTree::create(tree.node.clone(), a.clone(), *(b.c1.unwrap())));
+                    ret.insert_b(BTree::create(tree.node.clone(), a, *(b.c2.unwrap())));
 
                     ret
                 }
-                (Operator::Or | Operator::And, Operator::L(_) | Operator::Not) => {
+                (Operator::And, Operator::L(_) | Operator::Not) => {
                     let mut ret = BTree::new(c1.node.clone());
-                    ret.insert_a(BTree::create(tree.node.clone(), *c2.clone(), *(c1.c1.clone().unwrap())));
-                    ret.insert_b(BTree::create(tree.node.clone(), *c2.clone(), *(c1.c2.clone().unwrap())));
+                    let a = modify_tree(c2);
+                    let b = modify_tree(c1);
+                    ret.insert_a(BTree::create(tree.node.clone(), a.clone(), *(b.c1.unwrap())));
+                    ret.insert_b(BTree::create(tree.node.clone(), a, *(b.c2.unwrap())));
 
                     ret
                 }
-                (Operator::Or | Operator::And, Operator::Or | Operator::Not) => {
-                    let mut ret = BTree::new(c1.node.clone());
+                // (Operator::Or | Operator::And, Operator::Or | Operator::Not) => {
+                //     let mut ret = BTree::new(c1.node.clone());
 
-                }
-                _ => *tree.clone()
+                // }
+                _ => BTree::create(Operator::Or, modify_tree(c1), modify_tree(c2))
             }
         }
+        (_, Some(c1), Some(c2)) => BTree::create(
+            tree.node.clone(),
+            modify_tree(&Box::new(*c1.clone())),
+            modify_tree(&Box::new(*c2.clone()))
+        ),
         _ => *tree.clone()
     }
 
@@ -41,7 +50,7 @@ fn modify_tree(tree: &Box<BTree>) -> BTree {
 
 pub fn conjunctive_normal_form(formula: &str) -> String {
     match to_tree(&negation_normal_form(formula)) {
-        Ok(tree) => modify_tree(&Box::new(tree)).to_string(),
+        Ok(tree) => modify_tree(&Box::new(tree)).to_cnfstring(),
         Err(e) => {
             println!("{e}");
             String::default()
