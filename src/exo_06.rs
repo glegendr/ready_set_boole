@@ -1,41 +1,36 @@
 use crate::exo_03::{to_tree, BTree, Operator};
 use crate::exo_05::negation_normal_form;
 
-
-fn is_and_or(op: Operator) -> bool {
-    match op {
-        Operator::Or | Operator::And => true,
-        _ => false
-    }
-}
-
 fn modify_tree(tree: &Box<BTree>) -> BTree {
     match (&tree.node, &tree.c1, &tree.c2) {
         (Operator::Or, Some(c1), Some(c2)) => {
             match (&c1.node, &c2.node) {
-                (Operator::L(_) | Operator::Not, Operator::And) => {
+                (_, Operator::And) => {
                     let mut ret = BTree::new(c2.node.clone());
                     let a = modify_tree(c1);
                     let b = modify_tree(c2);
                     ret.insert_a(BTree::create(tree.node.clone(), a.clone(), *(b.c1.unwrap())));
                     ret.insert_b(BTree::create(tree.node.clone(), a, *(b.c2.unwrap())));
 
-                    ret
+                    modify_tree(&Box::new(ret))
                 }
-                (Operator::And, Operator::L(_) | Operator::Not) => {
+                (Operator::And, _) => {
                     let mut ret = BTree::new(c1.node.clone());
                     let a = modify_tree(c2);
                     let b = modify_tree(c1);
                     ret.insert_a(BTree::create(tree.node.clone(), a.clone(), *(b.c1.unwrap())));
                     ret.insert_b(BTree::create(tree.node.clone(), a, *(b.c2.unwrap())));
 
-                    ret
+                    modify_tree(&Box::new(ret))
                 }
-                // (Operator::Or | Operator::And, Operator::Or | Operator::Not) => {
-                //     let mut ret = BTree::new(c1.node.clone());
-
-                // }
-                _ => BTree::create(Operator::Or, modify_tree(c1), modify_tree(c2))
+                _ => {
+                    let a = modify_tree(c1);
+                    let b = modify_tree(c2);
+                    if a.node == Operator::And || b.node == Operator::And {
+                        return modify_tree(&Box::new(BTree::create(Operator::Or, a, b)))
+                    }
+                    BTree::create(Operator::Or, a, b)
+                }
             }
         }
         (_, Some(c1), Some(c2)) => BTree::create(

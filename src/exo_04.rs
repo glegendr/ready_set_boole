@@ -24,7 +24,12 @@ fn print_results(results: Vec<(u32, bool)>, vars_len: usize) -> String {
     ret
 }
 
+
 pub fn print_truth_table(formula: &str) {
+    println!("{}", calc_truth_table(formula))
+}
+
+pub fn calc_truth_table(formula: &str) -> String {
     let mut vars = String::new();
 
     for c in formula.chars() {
@@ -37,8 +42,11 @@ pub fn print_truth_table(formula: &str) {
     }
 
     if vars.len() == 0 {
-        return
+        return String::default()
     }
+    let mut chars = vars.chars().collect::<Vec<char>>();
+    chars.sort_by(|a, b| a.cmp(b));
+    vars = String::from_iter(chars);
     let permutations: Vec<u32> = (0..=u32::MAX >> (32 - vars.len())).collect();
     let mut results: Vec<(u32, bool)> = Vec::new();
     let mut permutation_formula = String::with_capacity(formula.len());
@@ -50,7 +58,7 @@ pub fn print_truth_table(formula: &str) {
                         permutation_formula.push(((permutation >> i) & 1).to_string().chars().next().unwrap());
                     } else {
                         println!("Unexpected variable {c}");
-                        return
+                        return String::default()
                     }
                 },
                 _ => permutation_formula.push(c)
@@ -59,5 +67,5 @@ pub fn print_truth_table(formula: &str) {
         results.push((*permutation, eval_formula(&permutation_formula)));
         permutation_formula.clear();
     }
-    print!("{}{}", print_titles(&vars), print_results(results, vars.len()));
+    format!("{}{}", print_titles(&vars), print_results(results, vars.len()))
 }
