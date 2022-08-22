@@ -6,6 +6,7 @@ mod exo_04;
 mod exo_05;
 mod exo_06;
 mod exo_07;
+mod exo_08;
 use exo_00::adder;
 use exo_01::multiplier;
 use exo_02::gray_code;
