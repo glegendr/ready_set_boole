@@ -118,9 +118,6 @@ impl BTree {
         tree
     }
 
-    pub fn from_str(input: &str) -> Result<Self, String> {
-        create_tree(&mut String::from(input))
-    }
 }
 
 

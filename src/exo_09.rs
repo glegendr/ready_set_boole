@@ -153,22 +153,6 @@ impl BTree {
         Err(String::from("Error while parsing formula"))
     }
 
-    pub fn to_string(&self) -> String {
-        match (&self.node, &self.c1, &self.c2) {
-            (Operator::And, Some(c1), Some(c2)) => format!("{}{}&", c1.to_string(), c2.to_string()),
-            (Operator::Or, Some(c1), Some(c2)) => format!("{}{}|", c1.to_string(), c2.to_string()),
-            (Operator::Xor, Some(c1), Some(c2)) => format!("{}{}^", c1.to_string(), c2.to_string()),
-            (Operator::Equal, Some(c1), Some(c2)) => format!("{}{}=", c1.to_string(), c2.to_string()),
-            (Operator::Material, Some(c1), Some(c2)) => format!("{}{}>", c1.to_string(), c2.to_string()),
-            (Operator::Not, Some(c1), None) => format!("{}!", c1.to_string()),
-            (Operator::Not, None, Some(c2)) => format!("{}!", c2.to_string()),
-            (Operator::Set((s, b)), _, _) => format!("{s:?}{}", if *b {""} else {"!"}),
-            _ => format!("{self:?}")
-        }
-    }
-
-
-
     fn eval(&self) -> Result<(Vec<i32>, bool), String> {
         match (&self.node, &self.c1, &self.c2) {
             (Operator::And, Some(c1), Some(c2)) => {
